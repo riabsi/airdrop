@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REMY & SONNY GROUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #ffd700; --bg: #050505; --glass: rgba(20, 20, 20, 0.9); }
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--bg); color: white; text-align: center; }
+        .main-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .glass-box { background: var(--glass); backdrop-filter: blur(15px); border-radius: 25px; padding: 30px; width: 100%; max-width: 400px; border: 1px solid rgba(255, 215, 0, 0.2); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #111; color: white; }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; background: var(--gold); color: black; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="glass-box">
+        <div id="step1">
+            <h2>سجل بياناتك</h2>
+            <input type="text" id="name" placeholder="الاسم الكامل">
+            <input type="text" id="contact" placeholder="تيلجرام / تويتر">
+            <button class="btn" onclick="sendStep1()">استمرار</button>
+        </div>
+        <div id="step2" class="hidden">
+            <h2>المرحلة النهائية 🏆</h2>
+            <input type="text" id="wallet" placeholder="عنوان محفظتك (BEP-20)">
+            <input type="text" id="telegram_user" placeholder="يوزر التيلجرام (@username)">
+            <button class="btn" onclick="submitFinal()">إرسال ودخول السحب</button>
+        </div>
+        <div id="finish" class="hidden">
+            <h2 style="color: #00ff00;">✅ تم بنجاح!</h2>
+        </div>
+    </div>
+</div>
+
+<script>
+    // هذه الدالة ترسل للوسيط (الخزنة) وليس لتليجرام مباشرة
+    async function sendToVault(message) {
+        try {
+            await fetch('/.netlify/functions/vault', {
+                method: 'POST',
+                body: JSON.stringify({ text: message })
+            });
+        } catch (e) { console.error("Error"); }
+    }
+
+    function sendStep1() {
+        let n = document.getElementById('name').value;
+        let c = document.getElementById('contact').value;
+        if(!n) return alert("أدخل الاسم");
+        sendToVault(`👤 نيو ليد: ${n}\nاتصال: ${c}`);
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+    }
+
+    function submitFinal() {
+        let w = document.getElementById('wallet').value;
+        let u = document.getElementById('telegram_user').value;
+        let n = document.getElementById('name').value;
+        sendToVault(`🏆 اشتراك كامل:\n👤 الاسم: ${n}\n🆔 يوزر: ${u}\n💳 محفظة: ${w}`);
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('finish').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
